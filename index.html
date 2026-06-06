@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Swissorama Ausstellung</title>
+  <meta name="description" content="Projektseite fuer eine Swissorama Ausstellung mit Terminen an verschiedenen Orten." />
+
+  <!--
+    ============================================================
+    SWISSORAMA WEBSITE - EINFACH KOMMENTIERT
+    ============================================================
+
+    Diese Datei ist bewusst so geschrieben, dass du sie spaeter
+    selbst anpassen kannst.
+
+    Die wichtigsten Dinge:
+
+    1. CSS im <style>-Bereich = Aussehen
+       Farben, Abstaende, Schriftgroessen, Bild-Platzhalter.
+
+    2. HTML im <body>-Bereich = Inhalt
+       Titel, Texte, Termine, Bilder, Links.
+
+    3. JavaScript ganz unten = kleines Menu
+       Oeffnet und schliesst das Vollbild-Menu.
+
+    TIPP:
+    Wenn du Bilder einfuegen willst:
+    - Neben diese index.html einen Ordner "images" erstellen.
+    - Bilder dort hineinlegen.
+    - Dann z.B. "images/dein-bild.jpg" eintragen.
+  -->
+
+  <style>
+    /* ============================================================
+       1. GRUNDFARBEN UND GROESSEN
+       ============================================================
+
+       Hier kannst du die Grundstimmung der ganzen Website aendern.
+       Eine HEX-Farbe sieht z.B. so aus: #e94b35
+    */
+
+    :root {
+      --paper: #eef1e8;        /* heller Projektions-Hintergrund */
+      --ink: #151515;          /* fast schwarzer Text */
+      --white: #ffffff;
+      --blue: #4b7595;         /* Projektionsblau */
+      --red: #b94f44;          /* warmer Akzent */
+	  --realred: #FF2900;          /* knalliger Akzent */
+      --mint: #bfd6c5;         /* helles Projektionsgruen */
+      --yellow: #e1d58f;       /* mattes Kinogelb */
+      --violet: #b9b1d2;       /* optisches Violett */
+      --sea: #a7cfd1;          /* Cyan/Graublau */
+      --rose: #d6aaa3;         /* warmer Lichtton */
+      --line: rgba(21, 21, 21, 0.22);
+
+      /*
+        SEKTION-FARBEN
+
+        Hier musst du Farben nur noch EINMAL aendern.
+        Jede Section hat drei Verlaufsfarben:
+
+        --projekt-1 = erste Farbe
+        --projekt-2 = zweite Farbe
+        --projekt-3 = dritte Farbe
+
+        Beispiel Pink:
+        --about-1: #F5276C;
+      */
+
+      --projekt-1: #c8dfe3;
+      --projekt-2: #d7dfc6;
+      --projekt-3: #dac4ca;
+
+      --events-1: #bfd6c5;
+      --events-2: #abcfd4;
+      --events-3: #cfc3d9;
+
+      --about-1: #b9cfd0;
+      --about-2: #cdb9c6;
+      --about-3: #d7c89f;
+
+      --oral-1: #d4d1bd;
+      --oral-2: #7f9ca0;
+      --oral-3: #5d6078;
+
+      --contact-1: #9fb9b6;
+      --contact-2: #53666b;
+      --contact-3: #2d3440;
+
+      --side: clamp(26px, 6vw, 96px);
+
+      /*
+        SECTION-ABSTAENDE
+
+        --section-top = Abstand oben in jeder Section
+        --section-bottom = Abstand unten in jeder Section
+      */
+
+      --section-top: clamp(48px, 6vw, 92px);
+      --section-bottom: clamp(100px, 11vw, 170px);
+
+      /*
+        HERO-ABSTAND OBEN
+
+        Das ist der Abstand zwischen Kopfzeile/Menu und dem grossen
+        Anfangsbereich. Kleiner = Swissorama beginnt weiter oben.
+      */
+
+      --hero-top: clamp(88px, 7vw, 118px);
+
+      --max: 960px;
+      --radius: 8px;
+
+      --h1: clamp(48px, 7.2vw, 112px);
+      --h2: clamp(28px, 4.8vw, 62px);
+      --lead: clamp(18px, 2.25vw, 28px);
+      --text: clamp(15px, 1.05vw, 17px);
+      --small: clamp(12px, 1vw, 14px);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    /*
+      LICHTWOLKEN-PARALLAX
+
+      Diese feste Ebene liegt ueber der ganzen Seite.
+      Beim Scrollen verschiebt JavaScript unten die Position der Wolken.
+      Wenn es zu stark ist: opacity kleiner machen, z.B. 0.35.
+    */
+
+    .light-clouds {
+      position: fixed;
+      inset: -35vh -30vw;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.9;
+      mix-blend-mode: normal;
+      transform: translate3d(var(--cloud-x, 0px), var(--cloud-y, 0px), 0);
+      will-change: transform;
+    }
+
+    /*
+      FILM-EBENE UEBER DER GANZEN SEITE
+
+      Das ersetzt das alte Gitter im Hero:
+      - sehr feines Filmkorn
+      - horizontale Frame-Linien
+      - wenige 360-Grad-Messkreise
+
+      Staerker/schwacher: opacity veraendern.
+      Mehr Bewegung: die Zahlen im JavaScript ganz unten veraendern.
+    */
+
+    .film-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      opacity: 0.92;
+      mix-blend-mode: normal;
+    }
+
+    .film-overlay::before,
+    .film-overlay::after {
+      content: "";
+      position: absolute;
+      inset: -18vh -8vw;
+    }
+
+    .film-overlay::before {
+      transform: translate3d(calc(var(--film-x, 0px) * -0.35), calc(var(--film-y, 0px) * 0.4), 0);
+      will-change: transform;
+      background:
+        radial-gradient(circle at 78% 18%, transparent 0 91px, rgba(0, 0, 0, 0.22) 92px, transparent 93px, transparent 132px, rgba(0, 0, 0, 0.14) 133px, transparent 134px),
+        radial-gradient(circle at 13% 62%, transparent 0 72px, rgba(0, 0, 0, 0.2) 73px, transparent 74px, transparent 108px, rgba(0, 0, 0, 0.13) 109px, transparent 110px),
+        radial-gradient(circle at 44% 38%, transparent 0 124px, rgba(0, 0, 0, 0.12) 125px, transparent 126px),
+        radial-gradient(circle at 18% 112%, transparent 0 90px, rgba(0, 0, 0, 0.16) 91px, transparent 92px),
+        radial-gradient(circle at 88% 92%, transparent 0 118px, rgba(0, 0, 0, 0.13) 119px, transparent 120px),
+        repeating-linear-gradient(0deg, transparent 0 118px, rgba(0, 0, 0, 0.16) 119px, transparent 120px),
+        repeating-linear-gradient(90deg, transparent 0 23vw, rgba(0, 0, 0, 0.08) 23vw, transparent calc(23vw + 1px));
+    }
+
+    .film-overlay::after {
+      opacity: 0.58;
+      transform: translate3d(calc(var(--film-x, 0px) * 0.2), calc(var(--film-y, 0px) * -0.55), 0);
+      will-change: transform;
+      background-image:
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.18) 0 8px, transparent 8px 30px),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.18) 0 8px, transparent 8px 30px),
+        radial-gradient(circle at 14% 22%, rgba(0, 0, 0, 0.13) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 70% 58%, rgba(255, 255, 255, 0.28) 0 1px, transparent 1.5px),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.1), transparent 10%, transparent 90%, rgba(0, 0, 0, 0.1));
+      background-position:
+        22px 0,
+        calc(100% - 32px) 0,
+        0 0,
+        0 0,
+        0 0;
+      background-size:
+        8px 36px,
+        8px 36px,
+        21px 19px,
+        29px 31px,
+        100% 100%;
+      background-repeat:
+        repeat-y,
+        repeat-y,
+        repeat,
+        repeat,
+        no-repeat;
+    }
+
+    .light-clouds::before,
+    .light-clouds::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-repeat: no-repeat;
+      filter: blur(38px) saturate(1.65) hue-rotate(var(--cloud-hue, 0deg));
+      will-change: transform, background-position;
+    }
+
+    .light-clouds::before {
+      background-image:
+        radial-gradient(ellipse 50% 40% at 30% 35%, rgba(64, 111, 190, 0.44), transparent 68%),
+        radial-gradient(ellipse 22% 30% at 68% 40%, rgba(245, 39, 108, 0.4), transparent 70%),
+        radial-gradient(ellipse 26% 50% at 45% 70%, rgba(255, 226, 91, 0.46), transparent 72%);
+      animation:
+        cloud-drift-a 18s ease-in-out infinite alternate,
+        cloud-color-shift 28s ease-in-out infinite alternate;
+    }
+
+    .light-clouds::after {
+      background-image:
+        radial-gradient(ellipse 30% 20% at 78% 70%, rgba(0, 218, 210, 0.38), transparent 70%),
+        radial-gradient(ellipse 20% 21% at 60% 78%, rgba(255, 255, 255, 0.5), transparent 72%),
+        radial-gradient(ellipse 34% 23% at 52% 38%, rgba(147, 117, 214, 0.26), transparent 70%);
+      animation:
+        cloud-drift-b 24s ease-in-out infinite alternate,
+        cloud-color-shift 34s ease-in-out infinite alternate-reverse;
+    }
+
+    @keyframes cloud-color-shift {
+      from {
+        filter: blur(38px) saturate(1.25) hue-rotate(-40deg);
+      }
+
+      to {
+        filter: blur(42px) saturate(1.75) hue-rotate(60deg);
+      }
+    }
+
+    @keyframes cloud-drift-a {
+      from {
+        transform: translate3d(-3vw, -2vh, 0) rotate(-2deg) scale(1);
+      }
+
+      to {
+        transform: translate3d(7vw, 5vh, 0) rotate(3deg) scale(1.08);
+      }
+    }
+
+    @keyframes cloud-drift-b {
+      from {
+        transform: translate3d(6vw, 4vh, 0) rotate(2deg) scale(1.04);
+      }
+
+      to {
+        transform: translate3d(-7vw, -5vh, 0) rotate(-3deg) scale(1.12);
+      }
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    /* ============================================================
+       2. OBERE LEISTE UND MENU
+       ============================================================ */
+
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 10;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      padding: 12px var(--side);
+      background: rgba(227, 250, 250, 0.84);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(12px);
+    }
+
+    .logo {
+      font-size: var(--small);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0;
+      line-height: 1.15;
+    }
+
+    .menu-button,
+    .close-button {
+      border: 1px solid currentColor;
+      border-radius: 999px;
+      background: transparent;
+      color: inherit;
+      padding: 4px 16px;
+      font-size: var(--small);
+      font-weight: 800;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .menu {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: none;
+      place-items: center;
+      padding: var(--side);
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(180, 211, 211, 0.28), transparent 28%),
+        radial-gradient(circle at 74% 70%, rgba(201, 176, 198, 0.22), transparent 32%),
+        radial-gradient(circle at 58% 28%, rgba(225, 213, 143, 0.12), transparent 26%),
+        linear-gradient(135deg, #1d2a30 0%, #313b4c 54%, #202329 100%);
+      color: #edf1e7;
+      text-align: center;
+    }
+
+    .menu::before,
+    .menu::after {
+      content: "";
+      position: absolute;
+      inset: -12vh -8vw;
+      pointer-events: none;
+    }
+
+    .menu::before {
+      opacity: 0.34;
+      background:
+        radial-gradient(circle at 18% 24%, transparent 0 82px, rgba(237, 241, 231, 0.5) 83px, transparent 84px, transparent 122px, rgba(237, 241, 231, 0.32) 123px, transparent 124px),
+        radial-gradient(circle at 82% 72%, transparent 0 96px, rgba(237, 241, 231, 0.42) 97px, transparent 98px, transparent 142px, rgba(237, 241, 231, 0.26) 143px, transparent 144px),
+        radial-gradient(circle at 62% 16%, transparent 0 128px, rgba(237, 241, 231, 0.24) 129px, transparent 130px),
+        repeating-linear-gradient(0deg, transparent 0 118px, rgba(237, 241, 231, 0.24) 119px, transparent 120px),
+        repeating-linear-gradient(90deg, transparent 0 23vw, rgba(237, 241, 231, 0.14) 23vw, transparent calc(23vw + 1px));
+    }
+
+    .menu::after {
+      opacity: 0.22;
+      background-image:
+        linear-gradient(to bottom, rgba(237, 241, 231, 0.58) 0 8px, transparent 8px 30px),
+        linear-gradient(to bottom, rgba(237, 241, 231, 0.58) 0 8px, transparent 8px 30px),
+        radial-gradient(circle at 14% 22%, rgba(237, 241, 231, 0.36) 0 1px, transparent 1.5px);
+      background-position:
+        22px 0,
+        calc(100% - 32px) 0,
+        0 0;
+      background-size:
+        8px 36px,
+        8px 36px,
+        21px 19px;
+      background-repeat:
+        repeat-y,
+        repeat-y,
+        repeat;
+    }
+
+    .menu.open {
+      display: grid;
+    }
+
+    .menu-links {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      gap: 12px;
+    }
+
+    .menu a {
+      font-size: var(--h2);
+      font-weight: 900;
+      line-height: 1;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .close-button {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 3;
+    }
+
+    /* ============================================================
+       3. ALLGEMEINE ABSCHNITTE
+       ============================================================ */
+
+    section {
+      position: relative;
+      overflow: hidden;
+      scroll-margin-top: 86px;
+      padding: var(--section-top) var(--side) var(--section-bottom) var(--side);
+      border-bottom: 1px solid var(--line);
+    }
+
+    section > .inner {
+      position: relative;
+      z-index: 3;
+    }
+
+    .section-project {
+      background:
+        radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.58), transparent 24%),
+        radial-gradient(circle at 78% 10%, rgba(167, 207, 209, 0.48), transparent 28%),
+        linear-gradient(135deg, var(--projekt-1) 0%, var(--projekt-2) 48%, var(--projekt-3) 100%);
+    }
+
+    .section-events {
+      background:
+        radial-gradient(circle at 82% 14%, rgba(255, 255, 255, 0.42), transparent 22%),
+        radial-gradient(circle at 18% 78%, rgba(225, 213, 143, 0.34), transparent 26%),
+        linear-gradient(145deg, var(--events-1) 0%, var(--events-2) 56%, var(--events-3) 100%);
+    }
+
+    .section-about {
+      background:
+        radial-gradient(circle at 22% 16%, rgba(255, 255, 255, 0.38), transparent 28%),
+        radial-gradient(circle at 84% 74%, rgba(225, 213, 143, 0.28), transparent 28%),
+        linear-gradient(138deg, var(--about-1) 0%, var(--about-2) 50%, var(--about-3) 100%);
+    }
+
+    .section-oral {
+      background:
+        radial-gradient(circle at 70% 24%, rgba(255, 255, 255, 0.24), transparent 24%),
+        radial-gradient(circle at 16% 78%, rgba(214, 170, 163, 0.22), transparent 28%),
+        linear-gradient(142deg, var(--oral-1) 0%, var(--oral-2) 52%, var(--oral-3) 100%);
+      color: var(--ink);
+    }
+
+    .section-contact {
+      background:
+        radial-gradient(circle at 25% 20%, rgba(230, 238, 224, 0.24), transparent 24%),
+        radial-gradient(circle at 82% 76%, rgba(185, 177, 210, 0.18), transparent 30%),
+        linear-gradient(158deg, var(--contact-1) 0%, var(--contact-2) 54%, var(--contact-3) 100%);
+      color: #f0f3ea;
+    }
+
+    .inner {
+      width: min(100%, var(--max));
+      margin: 0 auto;
+    }
+
+    .section-label {
+      margin: 0 0 14px;
+      font-size: var(--small);
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .section-title {
+      margin: 0 0 26px;
+      font-size: var(--h2);
+      line-height: 1;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .lead {
+      max-width: 700px;
+      margin: 0;
+      font-size: var(--lead);
+      font-weight: 800;
+      line-height: 1.14;
+    }
+
+    .text {
+      max-width: 620px;
+      margin: 22px 0 0;
+      font-size: var(--text);
+    }
+	
+	.word-red {
+	  color: var(--realred);
+	}
+
+	.word-blue {
+	  color: var(--blue);
+	}
+
+	.word-pink {
+	  color: #F5276C;
+	}
+
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 20px;        /* Hoehe des Buttons */
+      padding: 6px 24px;      /* innen: oben/unten, links/rechts */
+      border: 1px solid var(--ink);
+      border-radius: 999px;
+      background: var(--ink);  /* Button-Farbe */
+      color: var(--paper);     /* Schriftfarbe */
+      font-size: clamp(13px, 1.5vw, 17px);
+      font-weight: 900;
+      line-height: 1.15;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .button:hover {
+      background: var(--blue);
+      border-color: var(--blue);
+    }
+
+    /* ============================================================
+       4. HERO / STARTBEREICH
+       ============================================================ */
+
+    .hero {
+      min-height: 86svh;
+      padding-top: var(--hero-top);
+      display: grid;
+      align-items: start;
+      background:
+        radial-gradient(circle at 70% 26%, rgba(185, 208, 212, 0.55), transparent 24%),
+        radial-gradient(circle at 88% 72%, rgba(216, 184, 173, 0.48), transparent 26%),
+        radial-gradient(circle at 16% 80%, rgba(200, 216, 202, 0.44), transparent 24%),
+        var(--paper);
+    }
+
+    .hero-grid {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 0.82fr) minmax(320px, 0.82fr);
+      gap: clamp(42px, 6vw, 92px);
+      align-items: center;
+      overflow: visible;
+    }
+
+    .hero h1 {
+      position: relative;
+      z-index: 3;
+      margin: 0;
+      font-size: var(--h1);
+      font-weight: 950;
+      line-height: 0.88;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .hero-grid > div:first-child {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-subtitle {
+      max-width: 420px;
+      margin: 20px 0 24px;
+      font-size: clamp(18px, 2.25vw, 28px);
+      font-weight: 800;
+      line-height: 1.12;
+    }
+
+    .hero-note {
+      max-width: 420px;
+      margin-top: 18px;
+      font-size: var(--text);
+    }
+
+    /* Grosser Bild-Platzhalter rechts im Startbereich */
+    .hero-media {
+      position: relative;
+      z-index: 1;
+      min-height: clamp(360px, 40vw, 520px);
+      height: clamp(360px, 40vw, 520px);
+      border: 1px solid var(--ink);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 45% 40%, rgba(255, 255, 255, 0.42), transparent 24%),
+        linear-gradient(135deg, rgba(75, 117, 149, 0.42), rgba(191, 214, 197, 0.34), rgba(214, 170, 163, 0.36));
+      color: var(--white);
+      display: grid;
+      align-items: end;
+      padding: 0;
+    }
+
+    .hero-media::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.32;
+      background:
+        repeating-linear-gradient(0deg, transparent 0 31%, rgba(0, 0, 0, 0.18) 31.2%, transparent 31.6%, transparent 65%, rgba(0, 0, 0, 0.12) 65.2%, transparent 65.6%),
+        repeating-linear-gradient(90deg, transparent 0 18%, rgba(0, 0, 0, 0.11) 18.2%, transparent 18.5%),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.16) 0 7px, transparent 7px 28px),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.16) 0 7px, transparent 7px 28px);
+      background-position:
+        0 0,
+        0 0,
+        18px 0,
+        calc(100% - 26px) 0;
+      background-size:
+        100% 100%,
+        100% 100%,
+        7px 34px,
+        7px 34px;
+      background-repeat:
+        no-repeat,
+        no-repeat,
+        repeat-y,
+        repeat-y;
+    }
+
+    .hero-media::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(244, 239, 229, 0.18), transparent 38%),
+        radial-gradient(circle at 35% 42%, rgba(255, 255, 255, 0.28), transparent 22%);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .hero-image-wrap {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      display: grid;
+      align-items: end;
+      font-size: var(--small);
+      font-weight: 900;
+      text-transform: uppercase;
+      line-height: 1.25;
+    }
+
+    .hero-media .hero-image {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      min-height: clamp(360px, 40vw, 520px);
+      object-fit: contain;
+      object-position: center bottom;
+      border: 0;
+      border-radius: 0;
+      padding: clamp(34px, 4vw, 58px) clamp(34px, 4vw, 60px) clamp(54px, 6vw, 82px);
+    }
+
+    .hero-caption {
+      position: absolute;
+      left: clamp(20px, 3vw, 40px);
+      right: auto;
+      bottom: clamp(18px, 2.8vw, 36px);
+      z-index: 3;
+      max-width: min(430px, calc(100% - 40px));
+      padding: 0;
+      background: transparent;
+      color: var(--ink);
+      border: 0;
+      border-radius: 0;
+      backdrop-filter: none;
+      font-size: clamp(12px, 1.15vw, 15px);
+      font-weight: 900;
+      line-height: 1.15;
+      text-transform: uppercase;
+      letter-spacing: 0;
+      text-shadow:
+        0 1px 0 rgba(244, 239, 229, 0.84),
+        0 0 14px rgba(244, 239, 229, 0.74);
+    }
+
+    .hero-image {
+      width: 100%;
+      min-height: clamp(260px, 34vw, 430px);
+      object-fit: cover;
+      border: 1px solid var(--ink);
+      border-radius: var(--radius);
+    }
+
+    /* ============================================================
+       5. BILDER MIT CAPTION
+       ============================================================
+
+       Dieses Muster kannst du fuer Bilder benutzen, die unten eine
+       Beschriftung ueber dem Bild haben sollen.
+    */
+	
+	.image-with-caption {
+	  position: relative;
+	  margin: 46px 0 0;
+	  border: 1px solid var(--ink);
+	  border-radius: var(--radius);
+	  overflow: hidden;
+	}
+
+	.image-with-caption img {
+	  width: 100%;
+	  display: block;
+	}
+
+	.image-with-caption figcaption {
+	  position: absolute;
+	  left: 24px;
+	  bottom: 20px;
+	  max-width: min(460px, calc(100% - 48px));
+	  color: var(--ink);
+	  font-size: clamp(12px, 1.15vw, 15px);
+	  font-weight: 900;
+	  line-height: 1.15;
+	  text-transform: uppercase;
+	  text-shadow:
+	    0 1px 0 rgba(244, 239, 229, 0.84),
+	    0 0 14px rgba(244, 239, 229, 0.74);
+	}
+
+    /* ============================================================
+       6. TERMINE
+       ============================================================ */
+
+    .events {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(230px, 100%), 1fr));
+      align-items: stretch;
+      gap: 22px;
+      margin-top: 0;
+    }
+
+    .event {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 18px;
+      min-height: 245px;
+      padding: clamp(18px, 2vw, 24px);
+      background: rgba(255, 255, 255, 0.62);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 10px 24px rgba(21, 21, 21, 0.045);
+    }
+
+    .event-date {
+      font-size: clamp(20px, 2.7vw, 30px);
+      font-weight: 950;
+      line-height: 1;
+      color: var(--realred);
+    }
+
+    .event-date span {
+      display: block;
+      margin-top: 10px;
+      font-size: var(--small);
+      font-weight: 900;
+      color: var(--ink);
+      text-transform: uppercase;
+    }
+
+    .event h3 {
+      margin: 0 0 8px;
+      font-size: clamp(18px, 2vw, 24px);
+      line-height: 1.1;
+      text-transform: uppercase;
+    }
+
+    .event p {
+      margin: 0;
+      font-size: var(--text);
+    }
+
+    .event-place {
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+      font-size: var(--small);
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .place-block {
+      display: grid;
+      grid-template-columns: minmax(150px, 0.28fr) minmax(0, 1fr);
+      gap: clamp(36px, 6vw, 88px);
+      align-items: start;
+      margin-top: 64px;
+    }
+
+    .place-block:first-child {
+      margin-top: 38px;
+    }
+
+    .place-title {
+      position: sticky;
+      top: 110px;
+      margin: 0;
+      font-size: clamp(24px, 3.2vw, 42px);
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .place-content {
+      display: grid;
+      gap: 16px;
+    }
+
+    .place-info {
+      padding: clamp(20px, 2.5vw, 30px);
+      background: rgba(255, 255, 255, 0.6);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 14px 34px rgba(21, 21, 21, 0.05);
+    }
+
+    .place-info h4 {
+      margin: 0 0 10px;
+      font-size: clamp(18px, 1.7vw, 23px);
+      line-height: 1.12;
+      text-transform: uppercase;
+    }
+
+    .place-info p {
+      max-width: 760px;
+      margin: 0;
+      font-size: var(--text);
+      white-space: pre-line;
+    }
+
+    .trailer-box {
+      aspect-ratio: 16 / 9;
+      width: 100%;
+      margin-top: 36px;
+      border: 1px solid var(--ink);
+      border-radius: var(--radius);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.2), transparent 18%),
+        linear-gradient(135deg, rgba(21, 21, 21, 0.92), rgba(77, 111, 145, 0.84), rgba(138, 123, 143, 0.76)),
+        repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.18) 0 2px, transparent 2px 18px);
+      color: var(--white);
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .trailer-box h3 {
+      margin: 0 0 10px;
+      font-size: clamp(28px, 5vw, 64px);
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .trailer-box p {
+      max-width: 520px;
+      margin: 0 auto;
+      font-size: var(--text);
+    }
+
+    .trailer-box iframe,
+    .trailer-box video {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
+
+    /* ============================================================
+       7. KONTAKT
+       ============================================================ */
+
+    .contact-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .contact-links a {
+      border: 1px solid currentColor;
+      border-radius: 999px;
+      padding: 4px 18px;
+      font-size: var(--small);
+      font-weight: 900;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    footer {
+      padding: 16px var(--side);
+      background: #202329;
+      color: #edf1e7;
+      font-size: var(--small);
+      font-weight: 400;
+      text-align: left;
+    }
+
+    /* ============================================================
+       8. HANDY-VERSION
+       ============================================================ */
+
+    @media (max-width: 850px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: auto;
+      }
+
+      .hero-media {
+        min-height: 360px;
+        height: 360px;
+      }
+
+      .hero-media .hero-image {
+        min-height: 360px;
+        padding: 28px 24px 64px;
+      }
+
+      .hero-caption {
+        bottom: 18px;
+      }
+
+      section > .inner {
+        transform: none;
+      }
+
+      .light-clouds {
+        opacity: 0.2;
+      }
+
+      .film-overlay {
+        opacity: 0.26;
+      }
+
+      .event {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .place-block {
+        grid-template-columns: 1fr;
+      }
+
+      .place-title {
+        position: static;
+      }
+
+      .topbar {
+        align-items: flex-start;
+      }
+
+      .logo {
+        max-width: 70%;
+      }
+    }
+
+    @media (min-width: 851px) {
+      .hero h1 {
+        width: max-content;
+        max-width: calc(100vw - (var(--side) * 2));
+        margin-right: -20vw;
+        text-shadow:
+          0 0 18px rgba(244, 239, 229, 0.58),
+          0 2px 0 rgba(244, 239, 229, 0.22);
+      }
+
+      .hero-media {
+        margin-left: clamp(-92px, -6vw, -48px);
+        transform: translateY(clamp(8px, 1.6vw, 26px));
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="light-clouds" aria-hidden="true"></div>
+  <div class="film-overlay" aria-hidden="true"></div>
+
+  <!-- ============================================================
+       OBERE MENUELEISTE
+       ============================================================ -->
+
+  <header class="topbar">
+    <div class="logo">Verein 360 · Swissorama Kontextualisierungsprojekt</div>
+    <button class="menu-button" onclick="openMenu()">Menu</button>
+  </header>
+
+  <!-- ============================================================
+       VOLLBILD-MENUE
+       Jeder Link springt zu einem Abschnitt mit passender id.
+       Beispiel: href="#termine" springt zu id="termine".
+       ============================================================ -->
+
+  <nav class="menu" id="menu">
+    <button class="close-button" onclick="closeMenu()">Close</button>
+    <div class="menu-links">
+      <a href="#home" onclick="closeMenu()">SWISSORAMA</a>
+      <a href="#projekt" onclick="closeMenu()">PROJEKT</a>
+      <a href="#veranstaltungen" onclick="closeMenu()">VERANSTALTUNGEN</a>
+      <a href="#ueber-uns" onclick="closeMenu()">UEBER UNS</a>
+      <a href="#oral-history" onclick="closeMenu()">ORAL HISTORY</a>
+      <a href="#kontakt" onclick="closeMenu()">KONTAKT</a>
+    </div>
+  </nav>
+
+  <main>
+    <!-- ============================================================
+         START / HERO
+
+         Hier steht der erste Eindruck der Website.
+         Rechts ist das grosse Startbild mit Caption.
+         ============================================================ -->
+
+    <section class="hero" id="home">
+      <div class="inner hero-grid">
+        <div>
+          <p class="section-label">Ausstellung · Archiv · Gespraeche</p>
+          <h1>Swissorama</h1>
+          <p class="hero-subtitle">Das 360° Kamera- und Projektionssystem von Ernst A. Heiniger.</p>
+          <a class="button" href="#projekt">Ein Kontextualisierungsprojekt</a>
+          <p class="hero-note">
+            Eine wandernde Projektseite fuer Ausstellungen, Veranstaltungen und Recherchen an verschiedenen Orten.
+          </p>
+        </div>
+
+        <div class="hero-media">
+          <div class="hero-image-wrap">
+            <img class="hero-image" src="images/swissorama_kamera2.png" alt="Swissorama Kameramodell, Verkehrshaus Schweiz">
+            <div class="hero-caption">Swissorama Kameramodell · Verkehrshaus der Schweiz</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SECTION 2: KURZE ERKLAERUNG ZUM PROJEKT + EIN BILD
+
+         Hier kommt eine kurze Einfuehrung zum Projekt.
+         Darunter ist ein Bild mit Caption.
+         ============================================================ -->
+
+    <section class="section-project" id="projekt">
+      <div class="inner">
+        <p class="section-label">Projekt</p>
+        <h2 class="section-title">Worum geht es?</h2>
+        <p class="lead">
+          Swissorama war ein 360° Kamera- und Projektionssystem. Dieses Projekt fragt, wie diese Bildmaschine entstanden ist, was sie versprach und wie wir sie heute neu verstehen können.
+        </p>
+        <p class="text">
+          Hier kannst du später noch 3 bis 5 Sätze ergänzen: Was zeigt die Ausstellung?
+          Wer ist beteiligt? Welche Materialien, Gespräche oder historischen Spuren werden sichtbar?
+        </p>
+        <figure class="image-with-caption">
+          <img src="images/Impressionen05HeinigerKam.jpg" alt="Ernst A. Heiniger mit seiner Kamera am Set von Impressionen der Schweiz">
+          <figcaption>ERNST A. HEINIGER MIT SWISSORAMA-KAMERA</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SECTION 3: VERANSTALTUNGEN
+
+         Hier stehen die Orte und Termine.
+         Du kannst Datum, Titel, Text und Adresse direkt ersetzen.
+         ============================================================ -->
+
+    <section class="section-events" id="veranstaltungen">
+      <div class="inner">
+        <p class="section-label">Programm</p>
+        <h2 class="section-title">Veranstaltungen</h2>
+        <p class="lead">
+          Drei Orte, mehrere Daten und jeweils eigene Adressen.
+        </p>
+
+        <div class="place-block">
+          <h3 class="place-title">Ort 1 · <span class="word-red">Zürich</span></h3>
+          <div class="place-content">
+            <div class="place-info">
+              <h4>Ausstellung und Veranstaltungen <span class="word-red">Zürich</span></h4>
+              <p>in Zusammenarbeit mit pool-Architekten, Zürich
+„Swissorama-amaronaP – Beispiele immersive Medien aus / in Zürich“
+vom Donnerstag 17.9.2026 bis Sa 10.10.2026, Öffnungzeiten jeweils Fr - So von 14-18H
+
+Im Rahmen der Ausstellung wird die VR-Version des 360-Grad Films „Impressionen der Schweiz“ (1984-2002, Verkehrshaus der Schweiz, Swissorama-System) gezeigt.
+Kein Eintritt 
+Ausstellungsraum loop, Weststrasse 118, 8003 Zürich
+Weitere Informationen: https://www.poolarch.ch/loop/
+
+Spezial-Veranstaltungen – beschränkte Platzzahl, Anmeldung erforderlich
+Anmeldungen für Spezialveranstaltungen per Email an: info@verein360.ch
+Nach Anmeldung bekommen Sie eine Reservationsbestätigung.</p>
+            </div>
+
+            <div class="events">
+              <article class="event">
+                <div class="event-date">12.09.<span>18:00 Uhr</span></div>
+                <div>
+                  <h3>Eröffnung</h3>
+                  <p>Kurze Begrüßung, Einführung in das Projekt und erster Blick auf das Material.</p>
+                </div>
+                <div class="event-place">Adresse einsetzen<br>Zürich</div>
+              </article>
+
+              <article class="event">
+                <div class="event-date">03.10.<span>19:00 Uhr</span></div>
+                <div>
+                  <h3>Gespräch</h3>
+                  <p>Gespräch mit Gästen, Zeitzeug:innen, Forschenden oder Beteiligten.</p>
+                </div>
+                <div class="event-place">Adresse einsetzen<br>Zürich</div>
+              </article>
+
+              <article class="event">
+                <div class="event-date">21.11.<span>20:00 Uhr</span></div>
+                <div>
+                  <h3>Filmabend</h3>
+                  <p>Screening, Einführung oder Präsentation von historischem Material.</p>
+                </div>
+                <div class="event-place">Adresse einsetzen<br>Zürich</div>
+              </article>
+            </div>
+          </div>
+        </div>
+
+        <div class="place-block">
+          <h3 class="place-title">Ort 2 · <span class="word-red">Luzern</span></h3>
+          <div class="place-content">
+            <div class="place-info">
+              <h4>Einführung <span class="word-red">Luzern</span></h4>
+              <p>Hier kann ein Infotext zum Luzerner Teil stehen: beteiligter Ort, thematischer Schwerpunkt, Öffnungszeiten oder organisatorische Hinweise.</p>
+            </div>
+
+            <div class="events">
+              <article class="event">
+                <div class="event-date">15.01.<span>18:30 Uhr</span></div>
+                <div>
+                  <h3>Ausstellung</h3>
+                  <p>Präsentation des Projekts mit lokalem Schwerpunkt und ausgewähltem Bildmaterial.</p>
+                </div>
+                <div class="event-place">Adresse einsetzen<br>Luzern</div>
+              </article>
+
+              <article class="event">
+                <div class="event-date">29.01.<span>17:00 Uhr</span></div>
+                <div>
+                  <h3>Führung</h3>
+                  <p>Geführter Rundgang durch Material, Fragen und historische Zusammenhänge.</p>
+                </div>
+                <div class="event-place">Adresse einsetzen<br>Luzern</div>
+              </article>
+            </div>
+          </div>
+        </div>
+
+        <div class="place-block">
+          <h3 class="place-title">Ort 3 · <span class="word-red">Thurgau</span></h3>
+          <div class="place-content">
+            <div class="place-info">
+              <h4>Einführung <span class="word-red">Thurgau</span></h4>
+              <p>Hier steht ein kurzer Text zur Station Thurgau: regionaler Kontext, besondere Fragestellung oder Hinweise zu Vermittlung und Programm.</p>
+            </div>
+
+            <div class="events">
+              <article class="event">
+                <div class="event-date">12.03.<span>18:00 Uhr</span></div>
+                <div>
+                  <h3>Präsentation</h3>
+                  <p>Einblick in Recherche, Archivmaterial und offene Fragen rund um Swissorama.</p>
+                </div>
+                <div class="event-place">Adresse einsetzen<br>Thurgau</div>
+              </article>
+
+              <article class="event">
+                <div class="event-date">26.03.<span>19:00 Uhr</span></div>
+                <div>
+                  <h3>Gespräch</h3>
+                  <p>Abschlussgespräch mit Beteiligten und Publikum.</p>
+                </div>
+                <div class="event-place">Adresse einsetzen<br>Thurgau</div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SECTION 4: UEBER UNS
+
+         Hier ist Platz fuer ein Bild und einen weiteren Erklaerungstext.
+         ============================================================ -->
+
+    <section class="section-about" id="ueber-uns">
+      <div class="inner">
+        <p class="section-label">Über uns</p>
+        <h2 class="section-title">Verein 360</h2>
+        <p class="lead">
+          Verein 360 widmet sich der Erforschung, Vermittlung und Kontextualisierung des Swissorama.
+        </p>
+		<figure class="image-with-caption">
+		  <img src="images/negativ_magnus_01.jpg" alt="Negativ des Swissoramaformats">
+		  <figcaption>NEGATIV DES SWISSORAMAFORMATS</figcaption>
+		</figure>
+          
+
+
+        <p class="text">
+          Hier kann ein weiterer Erklärungstext stehen: Wer arbeitet am Projekt?
+          Warum interessiert euch Swissorama? Mit welchen Institutionen, Archiven oder Personen arbeitet ihr zusammen?
+        </p>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SECTION 5: ORAL HISTORY
+
+         Kurzer Text plus Trailer-Platzhalter.
+         Spaeter kannst du hier ein Video einbetten.
+         ============================================================ -->
+
+    <section class="section-oral" id="oral-history">
+      <div class="inner">
+        <p class="section-label">Oral History</p>
+        <h2 class="section-title">Stimmen und Erinnerungen</h2>
+        <p class="lead">
+          In Gesprächen sammeln wir Erinnerungen, Erfahrungen und Perspektiven rund um Swissorama.
+        </p>
+        <p class="text">
+          Hier kann ein kurzer Text zum Oral-History-Teil stehen: Wer wird interviewt?
+          Welche Fragen stehen im Zentrum? Was soll durch die Gespräche sichtbar werden?
+        </p>
+
+        <div class="trailer-box">
+          <iframe
+            src="https://player.vimeo.com/video/1198992330?h=684eef9f48"
+            title="Swissorama Trailer"
+            allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen>
+          </iframe>
+        </div>
+
+        <!--
+          Vimeo-Video:
+
+          Das Video wird direkt von Vimeo geladen.
+          Wenn du spaeter ein anderes Vimeo-Video verwenden willst,
+          ersetze im iframe oben nur die Zahl und den h-Wert in der src-URL.
+        -->
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SECTION 6: KONTAKT
+         ============================================================ -->
+
+    <section class="section-contact" id="kontakt">
+      <div class="inner">
+        <p class="section-label">Kontakt</p>
+        <h2 class="section-title">Kontakt</h2>
+        <p class="lead">
+          Für Fragen, Hinweise, Kooperationen oder Archivmaterial freuen wir uns über Kontakt.
+        </p>
+
+        <div class="contact-links">
+          <a href="mailto:hello@example.com">E-Mail</a>
+          <a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a>
+          <a href="https://youtube.com" target="_blank" rel="noreferrer">YouTube</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    © 2026 Verein 360 · Swissorama Kontextualisierungsprojekt
+  </footer>
+
+  <!-- ============================================================
+       KLEINES JAVASCRIPT FUER DAS MENU
+       ============================================================ -->
+
+  <script>
+    function openMenu() {
+      document.getElementById("menu").classList.add("open");
+    }
+
+    function closeMenu() {
+      document.getElementById("menu").classList.remove("open");
+    }
+
+    /*
+      Lichtwolken-Parallax:
+      Beim Scrollen zieht eine weiche Projektionsebene durch die Seite.
+      Die Zahl 0.32 macht die Scroll-Bewegung sichtbar.
+      Groesser = mehr Bewegung, z.B. 0.45.
+    */
+
+    const lightClouds = document.querySelector(".light-clouds");
+    const filmOverlay = document.querySelector(".film-overlay");
+
+    function updateLightClouds() {
+      const y = window.scrollY;
+	  lightClouds.style.setProperty("--cloud-y", `${Math.sin(y / 360) * 150}px`);
+	  lightClouds.style.setProperty("--cloud-x", `${Math.sin(y / 260) * 180}px`);
+	  filmOverlay.style.setProperty("--film-y", `${Math.sin(y / 260) * 70}px`);
+	  filmOverlay.style.setProperty("--film-x", `${Math.sin(y / 220) * 42}px`);
+    }
+
+    updateLightClouds();
+    window.addEventListener("scroll", updateLightClouds, { passive: true });
+  </script>
+</body>
+</html>
