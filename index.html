@@ -506,6 +506,30 @@
       margin: 22px 0 0;
       font-size: var(--text);
     }
+
+    .text-box {
+      width: 100%;
+      margin-top: 30px;
+      padding: clamp(20px, 2.8vw, 34px);
+      background: rgba(255, 255, 255, 0.52);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 14px 34px rgba(21, 21, 21, 0.045);
+    }
+
+    .text-box .lead,
+    .text-box .text {
+      max-width: 760px;
+    }
+
+    .text-box .lead {
+      margin: 0;
+    }
+
+    .text-box .text {
+      margin-top: 22px;
+    }
 	
 	.word-red {
 	  color: var(--realred);
@@ -1075,16 +1099,18 @@
       <div class="inner">
         <p class="section-label">Projekt</p>
         <h2 class="section-title">Worum geht es?</h2>
-        <p class="lead">
-          Swissorama war ein 360° Kamera- und Projektionssystem. Dieses Projekt fragt, wie diese Bildmaschine entstanden ist, was sie versprach und wie wir sie heute neu verstehen können.
-        </p>
-        <p class="text">
-		  Swissorama war ein weltweit einzigartiges analoges 360-Grad-Filmsystem im 70mm-Filmformat. Mit einer speziell entwickelten Kamera- und Projektionstechnik konnte erstmals ein nahtloses Rundumbild auf eine kreisförmige Leinwand projiziert werden. <br> Der erste Swissorama-Film «Impressionen der Schweiz» feierte 1984 im Verkehrshaus der Schweiz in Luzern Premiere. Im eigens dafür gebauten Rundkino erlebten bis zur Schliessung im Jahr 2002 rund 1,8 Millionen Besucherinnen und Besucher die Schweiz in einem damals revolutionären Format. <br><br>
-		  Entwickelt wurde Swissorama zwischen 1960 und 1980 vom Schweizer Fotografen und Filmemacher Ernst A. Heiniger in Zusammenarbeit mit der Firma Contac Engineering AG in der Schweiz. Sein Ziel war es, mit dem Prinzip «eine Kamera – ein Projektor – ein Film» ein vollkommen immersives Kinoerlebnis zu schaffen.
-		  Obwohl das System international Aufmerksamkeit erregte, entstanden neben «Impressionen der Schweiz» zw. 1988 und 1992 nur drei weitere Swissorama-Filme: für ein extra erbautes Kuppelkino in Berlin, sowie Ausstellungen in Sevilla und Kagava (Japan). <br><br>
-		  Mehr als 20 Jahre nach der Schliessung des Kinos erhielt der Film ein zweites Leben: Wiederentdeckte Originalnegative wurden von der Cinémathèque suisse digitalisiert und als Virtual-Reality-Version aufbereitet. Gleichzeitig konnte die originale Tonspur im Verkehrshaus wiedergefunden werden. <br><br>
-		  Dank der Initiative des Verein 360 und des Verkehrshauses der Schweiz ist heute zudem eine neue Planetariumsversion des 18-minütigen Films entstanden. So bleibt das einzigartige Erbe von Swissorama auch für kommende Generationen erlebbar. <br><br>
-        </p>
+        <div class="text-box">
+          <p class="lead">
+            Swissorama war ein 360° Kamera- und Projektionssystem. Dieses Projekt fragt, wie diese Bildmaschine entstanden ist, was sie versprach und wie wir sie heute neu verstehen können.
+          </p>
+          <p class="text">
+		    Swissorama war ein weltweit einzigartiges analoges 360-Grad-Filmsystem im 70mm-Filmformat. Mit einer speziell entwickelten Kamera- und Projektionstechnik konnte erstmals ein nahtloses Rundumbild auf eine kreisförmige Leinwand projiziert werden. <br> Der erste Swissorama-Film «Impressionen der Schweiz» feierte 1984 im Verkehrshaus der Schweiz in Luzern Premiere. Im eigens dafür gebauten Rundkino erlebten bis zur Schliessung im Jahr 2002 rund 1,8 Millionen Besucherinnen und Besucher die Schweiz in einem damals revolutionären Format. <br><br>
+		    Entwickelt wurde Swissorama zwischen 1960 und 1980 vom Schweizer Fotografen und Filmemacher Ernst A. Heiniger in Zusammenarbeit mit der Firma Contac Engineering AG in der Schweiz. Sein Ziel war es, mit dem Prinzip «eine Kamera – ein Projektor – ein Film» ein vollkommen immersives Kinoerlebnis zu schaffen.
+		    Obwohl das System international Aufmerksamkeit erregte, entstanden neben «Impressionen der Schweiz» zw. 1988 und 1992 nur drei weitere Swissorama-Filme: für ein extra erbautes Kuppelkino in Berlin, sowie Ausstellungen in Sevilla und Kagava (Japan). <br><br>
+		    Mehr als 20 Jahre nach der Schliessung des Kinos erhielt der Film ein zweites Leben: Wiederentdeckte Originalnegative wurden von der Cinémathèque suisse digitalisiert und als Virtual-Reality-Version aufbereitet. Gleichzeitig konnte die originale Tonspur im Verkehrshaus wiedergefunden werden. <br><br>
+		    Dank der Initiative des Verein 360 und des Verkehrshauses der Schweiz ist heute zudem eine neue Planetariumsversion des 18-minütigen Films entstanden. So bleibt das einzigartige Erbe von Swissorama auch für kommende Generationen erlebbar. <br><br>
+          </p>
+        </div>
         <figure class="image-with-caption">
           <img src="images/Impressionen05HeinigerKam.jpg" alt="Ernst A. Heiniger mit seiner Kamera am Set von Impressionen der Schweiz">
           <figcaption>ERNST A. HEINIGER MIT SWISSORAMA-KAMERA, Archiv Markus Imthurn, Foto: unbekannt </figcaption>
@@ -1229,9 +1255,11 @@ Nach Anmeldung bekommen Sie eine Reservationsbestätigung.</p>
       <div class="inner">
         <p class="section-label">Über uns</p>
         <h2 class="section-title">Verein 360</h2>
-        <p class="lead">
-          Verein 360 widmet sich der Erforschung, Vermittlung und Kontextualisierung des Swissorama.
-        </p>
+        <div class="text-box">
+          <p class="lead">
+            Verein 360 widmet sich der Erforschung, Vermittlung und Kontextualisierung des Swissorama.
+          </p>
+        </div>
 		<figure class="image-with-caption">
 		  <img src="images/negativ_magnus_02.jpg" alt="Negativ des Swissoramaformats">
 		  <figcaption>NEGATIV DES SWISSORAMAFORMATS. Foto: Magnus Rindisbacher</figcaption>
@@ -1239,10 +1267,12 @@ Nach Anmeldung bekommen Sie eine Reservationsbestätigung.</p>
           
 
 
-        <p class="text">
-          Hier kann ein weiterer Erklärungstext stehen: Wer arbeitet am Projekt?
-          Warum interessiert euch Swissorama? Mit welchen Institutionen, Archiven oder Personen arbeitet ihr zusammen?
-        </p>
+        <div class="text-box">
+          <p class="text">
+            Hier kann ein weiterer Erklärungstext stehen: Wer arbeitet am Projekt?
+            Warum interessiert euch Swissorama? Mit welchen Institutionen, Archiven oder Personen arbeitet ihr zusammen?
+          </p>
+        </div>
       </div>
     </section>
 
@@ -1257,13 +1287,15 @@ Nach Anmeldung bekommen Sie eine Reservationsbestätigung.</p>
       <div class="inner">
         <p class="section-label">Oral History</p>
         <h2 class="section-title">Stimmen und Erinnerungen</h2>
-        <p class="lead">
-          In Gesprächen sammeln wir Erinnerungen, Erfahrungen und Perspektiven rund um Swissorama.
-        </p>
-        <p class="text">
-          Hier kann ein kurzer Text zum Oral-History-Teil stehen: Wer wird interviewt?
-          Welche Fragen stehen im Zentrum? Was soll durch die Gespräche sichtbar werden?
-        </p>
+        <div class="text-box">
+          <p class="lead">
+            In Gesprächen sammeln wir Erinnerungen, Erfahrungen und Perspektiven rund um Swissorama.
+          </p>
+          <p class="text">
+            Hier kann ein kurzer Text zum Oral-History-Teil stehen: Wer wird interviewt?
+            Welche Fragen stehen im Zentrum? Was soll durch die Gespräche sichtbar werden?
+          </p>
+        </div>
 
         <div class="trailer-box">
           <iframe
