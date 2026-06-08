@@ -615,9 +615,19 @@
       line-height: 1.12;
     }
 
+    .hero .button,
     .hero-note {
-      max-width: 420px;
+      width: min(100%, 420px);
+    }
+
+    .hero-note {
       margin-top: 18px;
+      padding: clamp(16px, 2vw, 22px);
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(21, 21, 21, 0.14);
+      border-radius: var(--radius);
+      backdrop-filter: blur(6px);
+      box-shadow: 0 10px 24px rgba(21, 21, 21, 0.025);
       font-size: var(--text);
     }
 
