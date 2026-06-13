@@ -112,6 +112,7 @@
       --hero-top: clamp(88px, 7vw, 118px);
 
       --max: 960px;
+      --media-max: 820px;
       --radius: 8px;
 
       --h1: clamp(48px, 7.2vw, 112px);
@@ -755,7 +756,9 @@
 	
 	.image-with-caption {
 	  position: relative;
-	  margin: 46px 0 0;
+	  width: min(100%, var(--media-max));
+	  margin: 46px auto 0 0;
+	  justify-self: start;
 	  border: 1px solid var(--ink);
 	  border-radius: var(--radius);
 	  overflow: hidden;
@@ -794,16 +797,22 @@
     }
 
     .event {
+      position: relative;
       display: grid;
       grid-template-rows: auto 1fr auto;
       gap: 18px;
-      min-height: 245px;
       padding: clamp(18px, 2vw, 24px);
       background: rgba(255, 255, 255, 0.62);
       border: 1px solid var(--line);
       border-radius: var(--radius);
       backdrop-filter: blur(8px);
       box-shadow: 0 10px 24px rgba(21, 21, 21, 0.045);
+      transition:
+        max-height 1100ms cubic-bezier(0.19, 1, 0.22, 1),
+        margin 900ms cubic-bezier(0.19, 1, 0.22, 1),
+        padding 900ms cubic-bezier(0.19, 1, 0.22, 1),
+        box-shadow 700ms ease;
+      overflow: hidden;
     }
 
     .event-date {
@@ -864,17 +873,25 @@
     }
 
     .place-content {
+      position: relative;
       display: grid;
-      gap: 16px;
+      gap: 0;
     }
 
     .place-info {
+      position: relative;
       padding: clamp(20px, 2.5vw, 30px);
       background: rgba(255, 255, 255, 0.6);
       border: 1px solid var(--line);
       border-radius: var(--radius);
       backdrop-filter: blur(10px);
       box-shadow: 0 14px 34px rgba(21, 21, 21, 0.05);
+      transition:
+        max-height 1100ms cubic-bezier(0.19, 1, 0.22, 1),
+        margin 900ms cubic-bezier(0.19, 1, 0.22, 1),
+        padding 900ms cubic-bezier(0.19, 1, 0.22, 1),
+        box-shadow 700ms ease;
+      overflow: hidden;
     }
 
     .place-info h4 {
@@ -891,10 +908,121 @@
       white-space: pre-line;
     }
 
+    /*
+      KARTEIKARTEN-EFFEKT BEI DEN VERANSTALTUNGEN
+
+      Die Karten liegen zuerst gerade gestapelt wie Karteikarten.
+      Erst wenn man weiter in den Ortsblock hineinscrollt, fuegt
+      JavaScript unten die Klasse "cards-open" hinzu.
+    */
+
+    .section-events .place-info {
+      max-height: 68px;
+      padding-top: 20px;
+      padding-bottom: 18px;
+    }
+
+    .section-events .event {
+      max-height: 58px;
+      padding-top: 16px;
+      padding-bottom: 14px;
+    }
+
+    .section-events .place-block:not(.cards-open) .event-date span {
+      display: none;
+    }
+
+    .section-events .place-block:not(.cards-open) .events {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0;
+    }
+
+    .section-events .place-block:not(.cards-open) .events > .event {
+      grid-column: 1 / -1;
+    }
+
+    .section-events .place-block:not(.cards-open) .place-info,
+    .section-events .place-block:not(.cards-open) .event {
+      margin-top: -5px;
+      cursor: pointer;
+    }
+
+    .section-events .place-block:not(.cards-open) .place-info {
+      margin-top: 0;
+      z-index: 1;
+    }
+
+    .section-events .place-block:not(.cards-open) .event:nth-child(1) {
+      z-index: 2;
+    }
+
+    .section-events .place-block:not(.cards-open) .event:nth-child(2) {
+      z-index: 3;
+    }
+
+    .section-events .place-block:not(.cards-open) .event:nth-child(3) {
+      z-index: 4;
+    }
+
+    .section-events .place-info p,
+    .section-events .event h3,
+    .section-events .event p,
+    .section-events .event-place {
+      opacity: 0;
+      transform: translateY(-6px);
+      transition:
+        opacity 500ms ease,
+        transform 600ms ease;
+    }
+
+    .section-events .place-block.cards-open .place-info {
+      max-height: 900px;
+      margin-top: 0;
+      padding-top: clamp(20px, 2.5vw, 30px);
+      padding-bottom: clamp(20px, 2.5vw, 30px);
+    }
+
+    .section-events .place-block.cards-open .event {
+      max-height: 360px;
+      margin-top: 0;
+      padding-top: clamp(18px, 2vw, 24px);
+      padding-bottom: clamp(18px, 2vw, 24px);
+    }
+
+    .section-events .place-block.cards-open .event-date span {
+      display: block;
+    }
+
+    .section-events .place-block.cards-open .events {
+      grid-template-columns: repeat(auto-fit, minmax(min(230px, 100%), 1fr));
+      gap: clamp(22px, 3vw, 32px);
+      margin-top: clamp(22px, 3vw, 32px);
+    }
+
+    .section-events .place-block.cards-open .events > .event {
+      grid-column: auto;
+    }
+
+    .section-events .place-block.cards-open .place-info,
+    .section-events .place-block.cards-open .event {
+      box-shadow: 0 16px 38px rgba(21, 21, 21, 0.07);
+    }
+
+    .section-events .place-block.cards-open .place-info p,
+    .section-events .place-block.cards-open .event h3,
+    .section-events .place-block.cards-open .event p,
+    .section-events .place-block.cards-open .event-place {
+      opacity: 1;
+      transform: translateY(0);
+      transition-delay: 260ms;
+    }
+
     .trailer-box {
       aspect-ratio: 16 / 9;
-      width: 100%;
-      margin-top: 36px;
+      width: min(100%, var(--media-max));
+      margin: 36px auto 0 0;
+      justify-self: start;
       border: 1px solid var(--ink);
       border-radius: var(--radius);
       background:
@@ -903,7 +1031,8 @@
         repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.18) 0 2px, transparent 2px 18px);
       color: var(--white);
       display: grid;
-      place-items: center;
+      align-items: stretch;
+      justify-items: stretch;
       padding: 24px;
       text-align: center;
     }
@@ -1009,6 +1138,20 @@
 
       .place-title {
         position: static;
+      }
+
+      .section-events .place-info,
+      .section-events .event {
+        max-height: none;
+        transition: none;
+      }
+
+      .section-events .place-info p,
+      .section-events .event h3,
+      .section-events .event p,
+      .section-events .event-place {
+        opacity: 1;
+        transform: none;
       }
 
       .topbar {
@@ -1385,6 +1528,44 @@ Nach Anmeldung bekommen Sie eine Reservationsbestätigung.</p>
 
     updateLightClouds();
     window.addEventListener("scroll", updateLightClouds, { passive: true });
+
+    /*
+      Karteikarten bei Veranstaltungen:
+      Beim Ankommen in der Section bleiben die Karten zuerst gestapelt.
+      Erst beim Weiter-Scrollen in den jeweiligen Ortsblock faechern sie auf.
+    */
+
+    const placeBlocks = document.querySelectorAll(".section-events .place-block");
+
+    function updateEventCards() {
+      const viewportHeight = window.innerHeight;
+
+      placeBlocks.forEach((block) => {
+        if (block.classList.contains("cards-clicked")) {
+          block.classList.add("cards-open");
+          return;
+        }
+
+        const rect = block.getBoundingClientRect();
+        const openPoint = viewportHeight * 0.32;
+
+        if (rect.top < openPoint) {
+          block.classList.add("cards-open");
+        } else {
+          block.classList.remove("cards-open");
+        }
+      });
+    }
+
+    updateEventCards();
+    window.addEventListener("scroll", updateEventCards, { passive: true });
+    window.addEventListener("resize", updateEventCards);
+
+    placeBlocks.forEach((block) => {
+      block.addEventListener("click", () => {
+        block.classList.add("cards-clicked", "cards-open");
+      });
+    });
   </script>
 </body>
 </html>
