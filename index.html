@@ -751,7 +751,7 @@
        ============================================================
 
        Dieses Muster kannst du fuer Bilder benutzen, die unten eine
-       Beschriftung ueber dem Bild haben sollen.
+       Beschriftung direkt am Bildrahmen haben sollen.
     */
 	
 	.image-with-caption {
@@ -770,18 +770,17 @@
 	}
 
 	.image-with-caption figcaption {
-	  position: absolute;
-	  left: 24px;
-	  bottom: 20px;
-	  max-width: min(460px, calc(100% - 48px));
+	  padding: 7px 10px 8px;
+	  border-top: 1px solid var(--ink);
+	  background: rgba(238, 241, 232, 0.88);
 	  color: var(--ink);
-	  font-size: clamp(12px, 1.15vw, 15px);
-	  font-weight: 900;
-	  line-height: 1.15;
+	  font-size: clamp(11px, 0.95vw, 13px);
+	  font-weight: 400;
+	  line-height: 1.2;
 	  text-transform: uppercase;
-	  text-shadow:
-	    0 1px 0 rgba(244, 239, 229, 0.84),
-	    0 0 14px rgba(244, 239, 229, 0.74);
+	  white-space: nowrap;
+	  overflow: hidden;
+	  text-overflow: ellipsis;
 	}
 
     /* ============================================================
@@ -1161,6 +1160,12 @@
       .logo {
         max-width: 70%;
       }
+
+      .image-with-caption figcaption {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+      }
     }
 
     @media (min-width: 851px) {
@@ -1268,7 +1273,7 @@
         </div>
         <figure class="image-with-caption">
           <img src="images/Impressionen05HeinigerKam.jpg" alt="Ernst A. Heiniger mit seiner Kamera am Set von Impressionen der Schweiz">
-          <figcaption>Dreharbeiten "Impressionen der Schweiz", E.A.Heiniger mit Kamera, <br>Foto: unbekannt, Archiv Markus Imthurn </figcaption>
+          <figcaption>Dreharbeiten "Impressionen der Schweiz", E.A.Heiniger mit Kamera, Foto: unbekannt, Archiv Markus Imthurn</figcaption>
         </figure>
       </div>
     </section>
@@ -1419,7 +1424,7 @@ Tickets und weitere Informationen: https://www.filmpodium.ch/
         </div>
       <figure class="image-with-caption">
         <img src="images/SwissoramaFChristianKaenzig_FS_CH.jpg" alt="E.A. Heiniger im Testscreening">
-        <figcaption>E.A.Heiniger Testscreening, <br>Foto: Christian Känzig, Fotostiftung Schweiz </figcaption>
+        <figcaption>E.A.Heiniger Testscreening, Foto: Christian Känzig, Fotostiftung Schweiz</figcaption>
       </figure>
       </div>
     </section>
