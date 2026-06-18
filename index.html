@@ -610,7 +610,7 @@
     }
 
     .lead {
-      max-width: 32ch;
+      max-width: 760px;
       margin: 0;
       font-size: var(--lead);
       font-weight: 800;
@@ -618,7 +618,7 @@
     }
 
     .text {
-      max-width: 66ch;
+      max-width: 760px;
       margin: 22px 0 0;
       font-size: var(--text);
       line-height: 1.68;
@@ -640,16 +640,19 @@
 
     .text-box .lead,
     .text-box .text {
-      max-width: 66ch;
+      max-width: none;
     }
 
     .text-box .lead {
-      max-width: 30ch;
       margin: 0;
     }
 
     .text-box .text {
       margin-top: clamp(22px, 2.6vw, 30px);
+      overflow-wrap: break-word;
+    }
+
+    .text-box a {
       overflow-wrap: anywhere;
     }
 
