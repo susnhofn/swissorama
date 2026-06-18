@@ -223,15 +223,15 @@
     }
 
     body.flare-active .idle-flare {
-      animation: camera-flare-layer 1300ms ease-out both;
+      animation: camera-flare-layer 1650ms ease-out both;
     }
 
     body.flare-active .idle-flare::before {
-      animation: camera-flare-bloom 1300ms cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation: camera-flare-bloom 1650ms cubic-bezier(0.16, 1, 0.3, 1) both;
     }
 
     body.flare-active .idle-flare::after {
-      animation: camera-flare-streak 1300ms cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation: camera-flare-streak 1650ms cubic-bezier(0.16, 1, 0.3, 1) both;
     }
 
     .film-overlay::before,
@@ -666,6 +666,10 @@
     .text-box .text {
       margin-top: clamp(22px, 2.6vw, 30px);
       overflow-wrap: break-word;
+    }
+
+    .text-box .text:first-child {
+      margin-top: 0;
     }
 
     .text-box a {
@@ -1837,7 +1841,7 @@ Tickets und weitere Informationen: <a href="https://www.filmpodium.ch/" target="
     const lightClouds = document.querySelector(".light-clouds");
     const filmOverlay = document.querySelector(".film-overlay");
     const idleFlareDelay = 10000;
-    const idleFlareDuration = 1300;
+    const idleFlareDuration = 1650;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let idleFlareTimer;
     let idleFlarePlayed = false;
