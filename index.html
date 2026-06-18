@@ -901,6 +901,15 @@
       overflow: hidden;
     }
 
+    .section-events.instant-open .place-info,
+    .section-events.instant-open .event,
+    .section-events.instant-open .place-info p,
+    .section-events.instant-open .event h3,
+    .section-events.instant-open .event p,
+    .section-events.instant-open .event-place {
+      transition: none !important;
+    }
+
     .place-info h4 {
       margin: 0 0 10px;
       font-size: clamp(18px, 1.7vw, 23px);
@@ -1207,12 +1216,12 @@
   <nav class="menu" id="menu">
     <button class="close-button" onclick="closeMenu()">Close</button>
     <div class="menu-links">
-      <a href="#home" onclick="closeMenu()">RUND*UM*BILD</a>
-      <a href="#projekt" onclick="closeMenu()">SWISSORAMA</a>
-      <a href="#veranstaltungen" onclick="closeMenu()">VERANSTALTUNGEN</a>
-      <a href="#ueber-uns" onclick="closeMenu()">UEBER UNS</a>
-      <a href="#archiv" onclick="closeMenu()">ARCHIV</a>
-      <a href="#kontakt" onclick="closeMenu()">KONTAKT</a>
+      <a href="#home">RUND*UM*BILD</a>
+      <a href="#projekt">SWISSORAMA</a>
+      <a href="#veranstaltungen">VERANSTALTUNGEN</a>
+      <a href="#ueber-uns">UEBER UNS</a>
+      <a href="#archiv">ARCHIV</a>
+      <a href="#kontakt">KONTAKT</a>
     </div>
   </nav>
 
@@ -1492,7 +1501,7 @@ Tickets und weitere Informationen: <a href="https://www.filmpodium.ch/" target="
     </section>
 
     <!-- ============================================================
-         SECTION 5: ORAL HISTORY
+         SECTION 5: ARCHIV
 
          Kurzer Text plus Trailer-Platzhalter.
          Spaeter kannst du hier ein Video einbetten.
@@ -1500,7 +1509,7 @@ Tickets und weitere Informationen: <a href="https://www.filmpodium.ch/" target="
 
     <section class="section-oral" id="archiv">
       <div class="inner">
-        <p class="section-label">Archivarchiv</p>
+        <p class="section-label">Archiv</p>
         <h2 class="section-title">Stimmen und Erinnerungen</h2>
         <div class="text-box">
           <p class="lead">
@@ -1590,6 +1599,55 @@ Tickets und weitere Informationen: <a href="https://www.filmpodium.ch/" target="
     function closeMenu() {
       document.getElementById("menu").classList.remove("open");
     }
+
+    function getTopbarOffset() {
+      const topbar = document.querySelector(".topbar");
+      return (topbar ? topbar.getBoundingClientRect().height : 70) + 16;
+    }
+
+    function jumpToSection(id) {
+      closeMenu();
+
+      const target = document.getElementById(id);
+      if (!target) return;
+
+      const sectionsAfterEvents = ["ueber-uns", "archiv", "kontakt"];
+
+      if (sectionsAfterEvents.includes(id)) {
+        const eventsSection = document.querySelector(".section-events");
+
+        if (eventsSection) {
+          eventsSection.classList.add("instant-open");
+          eventsSection.querySelectorAll(".place-block").forEach((block) => {
+            block.classList.add("cards-clicked", "cards-open");
+          });
+
+          eventsSection.offsetHeight;
+        }
+      }
+
+      requestAnimationFrame(() => {
+        const targetTop = target.getBoundingClientRect().top + window.scrollY - getTopbarOffset();
+
+        window.scrollTo({ top: targetTop, behavior: "smooth" });
+        history.pushState(null, "", `#${id}`);
+
+        window.setTimeout(() => {
+          document.querySelector(".section-events")?.classList.remove("instant-open");
+        }, 200);
+      });
+    }
+
+    document.addEventListener("click", (event) => {
+      const link = event.target.closest('a[href^="#"]');
+      if (!link) return;
+
+      const id = link.getAttribute("href").slice(1);
+      if (!id) return;
+
+      event.preventDefault();
+      jumpToSection(id);
+    });
 
     /*
       Lichtwolken-Parallax:
