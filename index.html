@@ -931,6 +931,7 @@
 	.image-with-caption img {
 	  width: 100%;
 	  display: block;
+	  cursor: zoom-in;
 	}
 
 	.image-with-caption figcaption {
@@ -946,6 +947,127 @@
 	  overflow: hidden;
 	  text-overflow: ellipsis;
 	}
+
+    .hero-media .hero-image {
+      cursor: zoom-in;
+    }
+
+    /* ============================================================
+       BILD-LAYER
+       ============================================================ */
+
+    .image-lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      display: none;
+      place-items: center;
+      padding: clamp(18px, 4vw, 56px);
+      background:
+        radial-gradient(circle at 18% 18%, rgba(180, 211, 211, 0.22), transparent 28%),
+        radial-gradient(circle at 78% 74%, rgba(201, 176, 198, 0.2), transparent 32%),
+        linear-gradient(135deg, rgba(29, 42, 48, 0.94), rgba(32, 35, 41, 0.96));
+      color: #edf1e7;
+    }
+
+    .image-lightbox.open {
+      display: grid;
+    }
+
+    .image-lightbox::before,
+    .image-lightbox::after {
+      content: "";
+      position: absolute;
+      inset: -12vh -8vw;
+      pointer-events: none;
+    }
+
+    .image-lightbox::before {
+      opacity: 0.24;
+      background:
+        radial-gradient(circle at 18% 24%, transparent 0 82px, rgba(237, 241, 231, 0.5) 83px, transparent 84px, transparent 122px, rgba(237, 241, 231, 0.32) 123px, transparent 124px),
+        radial-gradient(circle at 82% 72%, transparent 0 96px, rgba(237, 241, 231, 0.42) 97px, transparent 98px, transparent 142px, rgba(237, 241, 231, 0.26) 143px, transparent 144px),
+        repeating-linear-gradient(0deg, transparent 0 118px, rgba(237, 241, 231, 0.22) 119px, transparent 120px),
+        repeating-linear-gradient(90deg, transparent 0 23vw, rgba(237, 241, 231, 0.12) 23vw, transparent calc(23vw + 1px));
+    }
+
+    .image-lightbox::after {
+      opacity: 0.18;
+      background-image:
+        linear-gradient(to bottom, rgba(237, 241, 231, 0.58) 0 8px, transparent 8px 30px),
+        linear-gradient(to bottom, rgba(237, 241, 231, 0.58) 0 8px, transparent 8px 30px),
+        radial-gradient(circle at 14% 22%, rgba(237, 241, 231, 0.36) 0 1px, transparent 1.5px);
+      background-position:
+        22px 0,
+        calc(100% - 32px) 0,
+        0 0;
+      background-size:
+        8px 36px,
+        8px 36px,
+        21px 19px;
+      background-repeat:
+        repeat-y,
+        repeat-y,
+        repeat;
+    }
+
+    .lightbox-frame {
+      position: relative;
+      z-index: 1;
+      max-width: min(100%, 1400px);
+      max-height: calc(100vh - clamp(36px, 8vw, 112px));
+      border: 1px solid #edf1e7;
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: rgba(238, 241, 232, 0.96);
+      color: var(--ink);
+      box-shadow: 0 28px 90px rgba(0, 0, 0, 0.42);
+    }
+
+    .lightbox-image {
+      width: auto;
+      height: auto;
+      max-width: min(100vw - clamp(36px, 8vw, 112px), 1400px);
+      max-height: calc(100vh - clamp(86px, 12vw, 170px));
+      object-fit: contain;
+      cursor: zoom-out;
+    }
+
+    .lightbox-caption {
+      display: none;
+      padding: 7px 10px 8px;
+      border-top: 1px solid var(--ink);
+      background: rgba(238, 241, 232, 0.92);
+      color: var(--ink);
+      font-size: clamp(11px, 0.95vw, 13px);
+      font-weight: 400;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+
+    .lightbox-caption.has-caption {
+      display: block;
+    }
+
+    .lightbox-close {
+      position: fixed;
+      top: clamp(12px, 2.4vw, 26px);
+      right: clamp(12px, 2.4vw, 26px);
+      z-index: 2;
+      width: 42px;
+      height: 42px;
+      border: 1px solid currentColor;
+      border-radius: 999px;
+      background: rgba(237, 241, 231, 0.1);
+      color: #edf1e7;
+      font-size: 28px;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    body.lightbox-open {
+      overflow: hidden;
+    }
 
     /* ============================================================
        6. TERMINE
@@ -1769,6 +1891,14 @@ Tickets und weitere Informationen: <a href="https://www.filmpodium.ch/" target="
     © 2026 Verein 360 · Swissorama Kontextualisierungsprojekt
   </footer>
 
+  <div class="image-lightbox" id="image-lightbox" aria-hidden="true">
+    <button class="lightbox-close" type="button" aria-label="Bild schliessen">×</button>
+    <figure class="lightbox-frame">
+      <img class="lightbox-image" src="" alt="">
+      <figcaption class="lightbox-caption"></figcaption>
+    </figure>
+  </div>
+
   <!-- ============================================================
        KLEINES JAVASCRIPT FUER DAS MENU
        ============================================================ -->
@@ -1924,6 +2054,75 @@ Tickets und weitere Informationen: <a href="https://www.filmpodium.ch/" target="
       block.addEventListener("click", () => {
         block.classList.add("cards-clicked", "cards-open");
       });
+    });
+
+    /*
+      Bild-Layer:
+      Alle Bilder mit Rahmen und das grosse Startbild koennen angeklickt
+      und ueber der Seite groesser angeschaut werden.
+    */
+
+    const lightbox = document.getElementById("image-lightbox");
+    const lightboxImage = lightbox.querySelector(".lightbox-image");
+    const lightboxCaption = lightbox.querySelector(".lightbox-caption");
+    const lightboxClose = lightbox.querySelector(".lightbox-close");
+    const zoomImages = document.querySelectorAll(".image-with-caption img, .hero-media .hero-image");
+
+    function getImageCaption(image) {
+      const figureCaption = image.closest("figure")?.querySelector("figcaption")?.textContent.trim();
+      const heroCaption = image.closest(".hero-image-wrap")?.querySelector(".hero-caption")?.textContent.trim();
+      return figureCaption || heroCaption || "";
+    }
+
+    function openImageLightbox(image) {
+      const caption = getImageCaption(image);
+
+      lightboxImage.src = image.currentSrc || image.src;
+      lightboxImage.alt = image.alt || caption || "Bild";
+      lightboxCaption.textContent = caption;
+      lightboxCaption.classList.toggle("has-caption", Boolean(caption));
+      lightbox.classList.add("open");
+      lightbox.setAttribute("aria-hidden", "false");
+      document.body.classList.add("lightbox-open");
+      lightboxClose.focus();
+    }
+
+    function closeImageLightbox() {
+      lightbox.classList.remove("open");
+      lightbox.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("lightbox-open");
+      lightboxImage.removeAttribute("src");
+    }
+
+    zoomImages.forEach((image) => {
+      image.setAttribute("tabindex", "0");
+      image.setAttribute("role", "button");
+      image.setAttribute("aria-label", "Bild gross anzeigen");
+
+      image.addEventListener("click", () => {
+        openImageLightbox(image);
+      });
+
+      image.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          openImageLightbox(image);
+        }
+      });
+    });
+
+    lightboxClose.addEventListener("click", closeImageLightbox);
+
+    lightbox.addEventListener("click", (event) => {
+      if (event.target === lightbox || event.target === lightboxImage) {
+        closeImageLightbox();
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && lightbox.classList.contains("open")) {
+        closeImageLightbox();
+      }
     });
   </script>
 </body>
