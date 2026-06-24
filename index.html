@@ -1036,6 +1036,12 @@
       cursor: zoom-out;
     }
 
+    .lightbox-image.camera-model {
+      width: auto;
+      height: min(46vh, 360px);
+      max-height: 360px;
+    }
+
     .lightbox-caption {
       display: none;
       padding: 7px 10px 8px;
@@ -2080,10 +2086,12 @@ Tickets und weitere Informationen: <a href="https://www.filmpodium.ch/" target="
     function openImageLightbox(image) {
       const caption = getImageCaption(image);
       const nativeScreenWidth = image.naturalWidth / (window.devicePixelRatio || 1);
+      const isCameraModel = image.src.includes("swissorama_kamera2.png");
 
       lightboxImage.src = image.currentSrc || image.src;
       lightboxImage.alt = image.alt || caption || "Bild";
       lightboxImage.style.setProperty("--image-native-width", `${nativeScreenWidth}px`);
+      lightboxImage.classList.toggle("camera-model", isCameraModel);
       lightboxCaption.textContent = caption;
       lightboxCaption.classList.toggle("has-caption", Boolean(caption));
       lightbox.classList.add("open");
