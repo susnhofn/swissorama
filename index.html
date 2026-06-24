@@ -1014,6 +1014,7 @@
     .lightbox-frame {
       position: relative;
       z-index: 1;
+      width: min(100%, 1400px);
       max-width: min(100%, 1400px);
       max-height: calc(100vh - clamp(36px, 8vw, 112px));
       border: 1px solid #edf1e7;
@@ -1026,10 +1027,11 @@
 
     .lightbox-image {
       display: block;
-      width: auto;
+      width: min(var(--image-native-width, 100%), calc(100vw - 48px));
       height: auto;
-      max-width: min(var(--image-native-width, 100%), calc(100vw - 48px));
+      max-width: 100%;
       max-height: calc(100vh - 96px);
+      margin: 0 auto;
       object-fit: contain;
       cursor: zoom-out;
     }
