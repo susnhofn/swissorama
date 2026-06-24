@@ -1028,7 +1028,7 @@
       display: block;
       width: auto;
       height: auto;
-      max-width: calc(100vw - 48px);
+      max-width: min(var(--image-native-width, 100%), calc(100vw - 48px));
       max-height: calc(100vh - 96px);
       object-fit: contain;
       cursor: zoom-out;
@@ -2077,9 +2077,11 @@ Tickets und weitere Informationen: <a href="https://www.filmpodium.ch/" target="
 
     function openImageLightbox(image) {
       const caption = getImageCaption(image);
+      const nativeScreenWidth = image.naturalWidth / (window.devicePixelRatio || 1);
 
       lightboxImage.src = image.currentSrc || image.src;
       lightboxImage.alt = image.alt || caption || "Bild";
+      lightboxImage.style.setProperty("--image-native-width", `${nativeScreenWidth}px`);
       lightboxCaption.textContent = caption;
       lightboxCaption.classList.toggle("has-caption", Boolean(caption));
       lightbox.classList.add("open");
