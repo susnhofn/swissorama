@@ -1025,10 +1025,11 @@
     }
 
     .lightbox-image {
+      display: block;
       width: auto;
       height: auto;
-      max-width: min(100vw - clamp(36px, 8vw, 112px), 1400px);
-      max-height: calc(100vh - clamp(86px, 12vw, 170px));
+      max-width: calc(100vw - 48px);
+      max-height: calc(100vh - 96px);
       object-fit: contain;
       cursor: zoom-out;
     }
