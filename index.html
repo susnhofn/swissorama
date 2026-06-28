@@ -920,7 +920,7 @@
 	
 	.image-with-caption {
 	  position: relative;
-	  width: min(100%, var(--media-max));
+	  width: min(100%, var(--image-frame-width, var(--media-max)));
 	  margin: 46px auto 0 0;
 	  justify-self: start;
 	  border: 1px solid var(--ink);
@@ -930,12 +930,15 @@
 
 	.image-with-caption img {
 	  width: 100%;
+	  height: auto;
+	  max-height: var(--image-native-height, none);
+	  object-fit: contain;
 	  display: block;
 	  cursor: zoom-in;
 	}
 
 	.image-with-caption img.camera-model {
-	  width: min(473px, 100%);
+	  width: 100%;
 	  max-width: 100%;
 	  height: auto;
 	  margin: 0 auto;
@@ -1092,7 +1095,7 @@
     .events {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(min(230px, 100%), 1fr));
-      align-items: stretch;
+      align-items: start;
       gap: 22px;
       margin-top: 0;
     }
@@ -1100,7 +1103,7 @@
     .event {
       position: relative;
       display: grid;
-      grid-template-rows: auto 1fr auto;
+      grid-template-rows: auto auto auto;
       gap: 18px;
       padding: clamp(18px, 2vw, 24px);
       background: rgba(255, 255, 255, 0.62);
@@ -1298,7 +1301,7 @@
     }
 
     .section-events .place-block.cards-open .event {
-      max-height: 360px;
+      max-height: 1000px;
       margin-top: 0;
       padding-top: clamp(18px, 2vw, 24px);
       padding-bottom: clamp(18px, 2vw, 24px);
@@ -1469,7 +1472,7 @@
       }
 
       .section-events .place-block.cards-open .event {
-        max-height: 520px;
+        max-height: 1200px;
       }
 
       .topbar {
@@ -2088,6 +2091,33 @@ Gäste <br>
     const lightboxCaption = lightbox.querySelector(".lightbox-caption");
     const lightboxClose = lightbox.querySelector(".lightbox-close");
     const zoomImages = document.querySelectorAll(".image-with-caption img, .hero-media .hero-image");
+
+    /*
+      Der Bildrahmen ist normalerweise so breit wie die Textbox (820 px).
+      Ist ein Originalbild schmaler, bleibt auch sein Rahmen schmaler.
+      Zudem wird kein Bild hoeher dargestellt als seine Originalhoehe.
+    */
+    document.querySelectorAll(".image-with-caption img").forEach((image) => {
+      const setNaturalImageSize = () => {
+        const figure = image.closest(".image-with-caption");
+        if (!figure || !image.naturalWidth || !image.naturalHeight) return;
+
+        figure.style.setProperty(
+          "--image-frame-width",
+          `${Math.min(image.naturalWidth, 820)}px`
+        );
+        image.style.setProperty(
+          "--image-native-height",
+          `${image.naturalHeight}px`
+        );
+      };
+
+      if (image.complete) {
+        setNaturalImageSize();
+      } else {
+        image.addEventListener("load", setNaturalImageSize, { once: true });
+      }
+    });
 
     function getImageCaption(image) {
       const figureCaption = image.closest("figure")?.querySelector("figcaption")?.textContent.trim();
