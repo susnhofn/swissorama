@@ -920,7 +920,7 @@
 	
 	.image-with-caption {
 	  position: relative;
-	  width: min(100%, var(--image-frame-width, var(--media-max)));
+	  width: min(100%, var(--image-frame-width, 100%));
 	  margin: 46px auto 0 0;
 	  justify-self: start;
 	  border: 1px solid var(--ink);
@@ -2093,7 +2093,7 @@ Gäste <br>
     const zoomImages = document.querySelectorAll(".image-with-caption img, .hero-media .hero-image");
 
     /*
-      Der Bildrahmen ist normalerweise so breit wie die Textbox (820 px).
+      Der Bildrahmen nutzt die maximale Breite des Inhaltsbereichs.
       Ist ein Originalbild schmaler, bleibt auch sein Rahmen schmaler.
       Zudem wird kein Bild hoeher dargestellt als seine Originalhoehe.
     */
@@ -2104,7 +2104,7 @@ Gäste <br>
 
         figure.style.setProperty(
           "--image-frame-width",
-          `${Math.min(image.naturalWidth, 820)}px`
+          `${image.naturalWidth}px`
         );
         image.style.setProperty(
           "--image-native-height",
