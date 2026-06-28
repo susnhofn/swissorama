@@ -1375,6 +1375,20 @@
       display: block;
     }
 
+    .trailer-placeholder {
+      width: 100%;
+      margin: 36px auto 0 0;
+      padding: 7px 10px 8px;
+      border: 1px solid var(--ink);
+      border-radius: var(--radius);
+      background: rgba(238, 241, 232, 0.88);
+      color: var(--ink);
+      font-size: clamp(11px, 0.95vw, 13px);
+      font-weight: 400;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+
     /* ============================================================
        7. KONTAKT
        ============================================================ */
@@ -1864,22 +1878,27 @@ Mit Gästen und Zeitzeugen. <br>
           </p>
         </div>
 
-        <div class="trailer-box">
-          <iframe
-            src="https://player.vimeo.com/video/1198992330?h=684eef9f48"
-            title="Swissorama Trailer"
-            allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
-            referrerpolicy="strict-origin-when-cross-origin"
-            allowfullscreen>
-          </iframe>
+        <div class="trailer-placeholder">
+          Hier folgt der Trailer zum Film mit Zeitzeugen.
         </div>
 
         <!--
-          Vimeo-Video:
+          Hier kann spaeter der richtige Trailer eingesetzt werden.
+		    <div class="trailer-box">
+		             <iframe
+		               src="https://player.vimeo.com/video/1198992330?h=684eef9f48"
+		               title="Swissorama Trailer"
+		               allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+		               referrerpolicy="strict-origin-when-cross-origin"
+		               allowfullscreen>
+		             </iframe>
+		             Vimeo-Video:
 
-          Das Video wird direkt von Vimeo geladen.
-          Wenn du spaeter ein anderes Vimeo-Video verwenden willst,
-          ersetze im iframe oben nur die Zahl und den h-Wert in der src-URL.
+		             Das Video wird direkt von Vimeo geladen.
+		             Wenn du spaeter ein anderes Vimeo-Video verwenden willst,
+		             ersetze im iframe oben nur die Zahl und den h-Wert in der src-URL.
+		             Hier kann spaeter der richtige Trailer eingesetzt werden.
+		           -->
         -->
       </div>
     </section>
