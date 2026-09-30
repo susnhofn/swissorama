@@ -928,6 +928,14 @@
 	  overflow: hidden;
 	}
 
+    .image-with-caption iframe {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 9;
+      border: 0;
+    }
+
 	.image-with-caption img {
 	  width: 100%;
 	  height: auto;
@@ -1893,13 +1901,15 @@ Infos und Anreise:<br>
             
           </p>
         </div>
-        <iframe
-          src="https://player.vimeo.com/video/1223985117"
-          title="Making of: Swissorama"
-          allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
-          referrerpolicy="strict-origin-when-cross-origin"
-          allowfullscreen>
-        </iframe>
+        <figure class="image-with-caption">
+          <iframe
+            src="https://player.vimeo.com/video/1223985117"
+            title="Making of: Swissorama"
+            allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen>
+          </iframe>
+        </figure>
 
 
 
